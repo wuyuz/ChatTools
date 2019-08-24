@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <link rel="stylesheet" href=" /static/plugins/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/static/plugins/font-awesome/css/font-awesome.css"/>
+    <style type="text/css">
+        body, td, th {
+            font-family: "Source Sans Pro", sans-serif;
+        }
+
+        body {
+            background-color: #2B2B2B;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="wrapper">
+    <div class="container">
+        <h1 {% if request.path_info == '/backend/reg/' %}style="margin-left:100px"{% endif %}>Welcome</h1>
+
+        <h3 {% if request.path_info == '/backend/reg/' %}style="margin-left:100px"{% endif %}>OldBoy聊天室</h3>
+        {% block content %}
+
+        {% endblock %}
+    </div>
+    <ul class="bg-bubbles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+</div>
+<script type="text/javascript" src="/static/js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript">
+    $('#login-button').click(function (event) {
+        event.preventDefault();
+        $('form').fadeOut(500);
+        $('.wrapper').addClass('form-success');
+    });
+</script>
+<script src="/static/plugins/bootstrap/js/bootstrap.min.js "></script>
+{% block js %}{% endblock %}
+</body>
+</html>

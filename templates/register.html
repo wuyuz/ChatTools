@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}注册页面{% endblock %}
+
+{% block content %}
+    <div class="col-lg-8 col-lg-offset-1" style="margin-top: 30px" >
+        <form class="form-horizontal" action="" method="post" novalidate enctype="multipart/form-data">
+            {% for field in form %}
+                <div class="form-group">
+                    <label  class="col-sm-3 control-label">{{ field.label }}</label>
+                    <div class="col-sm-9">
+                        {{ field }} <span class="text-danger">{{ field.errors[0] }}</span>
+                    </div>
+                </div>
+{#                <p class="text-danger"> {{ field.non_field_errors.0 }} </p>#}
+
+            {% endfor %}
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button type="submit" class="btn btn-toolbar">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
