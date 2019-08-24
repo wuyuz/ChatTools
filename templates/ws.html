@@ -17,6 +17,7 @@
                     <p id="username" style="padding-left:37px;">{{ user.name }}</p>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-lg-offset-3 col-lg-4">
                     <input type='text' class="btn btn-sm btn-danger" id="open" value="开机">
@@ -44,34 +45,96 @@
             </div>
         </div>
         <div class="col-lg-7 col-lg-offset-1">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <p id="friend" class="text-center" style="font-size: large"></p>
-                </div>
-
-                <div class="panel-body" style="height:350px;overflow-y: hidden;">
-                    <div class="row pre-scrollable" id="panel">
-
+            <!--单聊 -->
+            <div class="row" style="margin-bottom: 20px">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <p id="friend" class="text-center" style="font-size: large"></p>
                     </div>
-                </div>
 
-            </div>
-            <div class="panel-footer">
-                <div class="row">
-                    <div class="col-lg-offset-6 col-lg-6">
-                        <div class="input-group">
-                            <input type="text" id="content" class="form-control"
-                                   placeholder="Say something ...">
-                            <span class="input-group-btn">
+                    <div class="panel-body" style="height:360px;overflow-y: hidden;">
+                        <div class="row pre-scrollable" id="panel">
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-footer" style="margin-top: -18px">
+                    <div class="row">
+                        <div class="col-lg-offset-6 col-lg-6">
+                            <div class="input-group">
+                                <input type="text" id="content" class="form-control"
+                                       placeholder="Say something ...">
+                                <span class="input-group-btn">
                                     <button class="btn btn-default" type="button" id="send">send</button>
                                 </span>
-                        </div><!-- /input-group -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--群聊 -->
+            <div class="row" style="margin-bottom: 20px">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <p class="text-center" style="font-size: large">群聊</p>
+                    </div>
+
+                    <div class="panel-body" style="height:360px;overflow-y: hidden;">
+                        <div class="row pre-scrollable" id="qun">
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-footer" style="margin-top: -18px">
+                    <div class="row">
+                        <div class="col-lg-offset-6 col-lg-6">
+                            <div class="input-group">
+                                <input type="text" id="ctnx" class="form-control"
+                                       placeholder="Say something ...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" id="sendx">send</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--机器人 -->
+            <div class="row" style="margin-bottom: 20px">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <p class="text-center" style="font-size: large">小珠机器人</p>
+                    </div>
+
+                    <div class="panel-body" style="height:360px;overflow-y: hidden;">
+                        <div class="row pre-scrollable" id="Ai">
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-footer" style="margin-top: -18px">
+                    <div class="row">
+                        <div class="col-lg-offset-6 col-lg-6">
+                            <div class="input-group">
+                                <input type="text" id="ctnxx" class="form-control"
+                                       placeholder="Say something ...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" id="sendxx">send</button>
+
+                                </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    <button type></button>
 
 </div>
 <div id="xxx" style="display: none;">{{ user.avatar }}</div>
@@ -110,11 +173,11 @@
                 var ava = str_obj.avatar;
                 var lock = str_obj.chating;
                 $.each(str_obj.users, function (i, n) {
-                    console.log(n, lock);
+                    {#console.log(n, lock);#}
                     var tr = document.createElement('tr');
                     var bq = document.createElement('td');
                     if (lock.indexOf(n) >= 0) {
-                        bq = `<td><button id=${i} name='btn' class="btn btn-sm btn-warning">解绑</button></td>`
+                        bq = `<td id='dan'><button id=${i} name='btn' class="btn btn-sm btn-warning" onclick="xx('${n}')">解绑</button></td>`
                     } else {
                         bq = `<td><button id=${i} name='btn' class="btn btn-sm btn-danger" onclick="xxx('${n}')">单聊</button></td>`
                     }
@@ -137,6 +200,7 @@
             var n = document.getElementById('count');
             n.innerText = str_obj.count;
 
+
             //更新聊天框
             if (str_obj.status == 1) {
                 var from = str_obj.from_user;
@@ -156,6 +220,32 @@
                 if (img2 == null) {
                     img2 = img1;
                 }
+            }
+
+            if (str_obj.status == 3) {
+                img2 = null;
+                var n1 = str_obj.from_user;
+                document.getElementById('friend').innerText = '';
+                document.getElementById('dan').innerHTML = `<button  name='btn' class="btn btn-sm btn-danger" onclick="xxx('${n1}')">单聊</button>`;
+                $('#panel').text('');
+            }
+
+            if (str_obj.status == 4) {
+                console.log(JSON.stringify(str_obj));
+                var fromx = str_obj.from_user;
+                var chatx = str_obj.chat;
+                var img22x = str_obj.img;
+
+                var mediax = ` <div class="media">
+                        <div class="media-left">
+                            <img class="media-object" style="width:70px;height: 70px;border-radius: 50%" src='http://127.0.0.1:5000/get_img/${img22x}'>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">${fromx}</h4>
+                            <p>${chatx}</p>
+                        </div>
+                    </div>`;
+                $('#qun').append(mediax);
             }
         };
     }
@@ -180,7 +270,30 @@
                     chat_id = res.data['chat_id'];
                 }
             }
-        })
+        });
+        sendStr = {
+            to_user: username,
+            status: 0,
+        };
+        ws.send(JSON.stringify(sendStr));
+    }
+
+    function xx(name) {
+        var friend = document.getElementById('friend').innerText;
+        if (name != friend) {
+            alert('无法解绑')
+        } else {
+            document.getElementById('friend').innerText = '';
+            $('#panel').text('');
+            document.getElementById('dan').innerHTML = `<button name='btn' class="btn btn-sm btn-danger" onclick="xxx('${name}')">单聊</button>`;
+            sendStr = {
+                from_user: username,
+                to_user: name,
+                status: 3,
+            };
+            ws.send(JSON.stringify(sendStr));
+        }
+
     }
 
 
@@ -212,6 +325,76 @@
 
         $('#panel').append(media);
         document.getElementById('content').value = "";
-    })
+    });
+
+    //群聊
+    $('#sendx').click(function () {
+        var content = document.getElementById('ctnx').value;
+        var sendStr = {
+            from_user: username,
+            chat: content,
+            img: img1,
+            status: 4,
+        };
+
+        console.log(JSON.stringify(sendStr));
+        ws.send(JSON.stringify(sendStr));
+
+        var media = ` <div class="media">
+                        <div class="media-right pull-right">
+                            <img class="media-object" style="width:70px;height: 70px;border-radius: 50%" src='http://127.0.0.1:5000/get_img/${img1}'>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading text-right">${username}</h4>
+                            <p class='text-right'>${content}</p>
+                        </div>
+                    </div>`;
+
+        $('#qun').append(media);
+        document.getElementById('ctnx').value = "";
+    });
+
+    $('#sendxx').click(function () {
+        var content = document.getElementById('ctnxx').value;
+        var file_name = null;
+        $.ajax({
+            url: `/ai_chat/${content}/${username}`,
+            {#data:{'Q':`${content}`},#}
+            success: function (res) {
+                console.log(JSON.stringify(res));
+                if (res['code'] == 6) {
+                    var file_name = res['chat'];
+                    var mediaxx = ` <div class="media">
+                <div class="media-left pull-left">
+                    <img class="media-object" style="width:70px;height: 70px;border-radius: 50%" src='http://127.0.0.1:5000/get_img/jiqi.jpg'>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">小珠机器人</h4>
+                    <audio autoplay="autoplay" src='/get_audio/${file_name}' ></audio>
+                </div>
+                </div>`;
+
+                    $('#Ai').append(mediaxx);
+                    document.getElementById('ctnxx').value = "";
+                }
+            }
+        });
+
+        console.log(username, content);
+        var mediaxx = ` <div class="media">
+                        <div class="media-right pull-right">
+                            <img class="media-object" style="width:70px;height: 70px;border-radius: 50%" src='http://127.0.0.1:5000/get_img/${img1}'>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading text-right">${username}</h4>
+                            <p class='text-right'>${content}</p>
+                        </div>
+                    </div>`;
+
+        $('#Ai').append(mediaxx);
+        document.getElementById('ctnxx').value = "";
+    });
+
+    {#<p><i class="fa-spin fa-circle-o-notch"></i></p>#}
 </script>
 </html>

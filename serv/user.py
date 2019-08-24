@@ -1,5 +1,7 @@
+import os
 from uuid import uuid4
 
+import requests
 from bson import ObjectId
 from flask import Blueprint, render_template, request, redirect,jsonify
 from wtforms import Form
@@ -7,7 +9,7 @@ from wtforms.fields import simple
 from wtforms import validators
 from wtforms import widgets
 
-from settings import MongoDB, REG_PATH, RET
+from settings import MongoDB, REG_PATH, RET, TL_DATA, TL, CHAT_PATH, VOICE, AUDIO_CLIENT
 
 user = Blueprint('users', __name__, template_folder='templates')
 
@@ -100,7 +102,7 @@ def register():
             file.save(f'{REG_PATH}/{file_name}')
             dic['avatar'] = file_name
             dic['chat_list'] = []
-            print(dic)
+            # print(dic)
             # print('用户提交数据通过格式验证，提交的值为：', request.form.to_dict())
             MongoDB.users.insert_one(dic)
             return redirect('/login')
@@ -164,7 +166,6 @@ def get_chat(name,username):
         }
         RET['code'] = 2
         RET['data'] = friend_info
-        print(RET)
         return jsonify(RET)
     else:
         user_cont = []
@@ -184,8 +185,42 @@ def get_chat(name,username):
         }
         RET['code'] = 2
         RET['data'] = friend_info
-        print(RET)
         return jsonify(RET)
+
+
+def text2audio(text):
+    filename = f"{uuid4()}.mp3"
+    file_path = os.path.join(CHAT_PATH,filename)
+    res = AUDIO_CLIENT.synthesis(text,'zh', 1,VOICE)
+
+    if type(res) == dict:
+        pass
+    else:
+        with open(file_path,'wb') as f:
+            f.write(res)
+
+    return filename  # 用于返回生成的文件名
+
+
+@user.route('/ai_chat/<Q>/<username>',methods=['GET'])
+def ai_chat(Q,username):
+    TL_DATA['perception']['inputText']['text'] = Q
+    TL_DATA['userInfo']['userId'] = username
+    res = requests.post(TL, json=TL_DATA)  # 发送字典格式
+
+    res_json = res.json()  # requests对象的反序列化
+    start_content = res_json.get("results")[0].get("values").get("text")
+    filename = text2audio(start_content)
+
+    ret =  {
+        'code':6,
+        "from_user": "ai",
+        "chat": filename,
+    }
+
+    return jsonify(ret)
+
+
 
 
 
